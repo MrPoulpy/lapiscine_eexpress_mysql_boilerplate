@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const userController = require('../controllers/user.controller');
 const config = require('../config');
-const isAuth = require('../utils/auth');
+const loginValidator = require('../utils/auth');
 
 const router = express.Router();
 
@@ -28,8 +28,14 @@ router.route('/')
 ;
 
 router.route('/test')
-    .get(isAuth(), (req, res) => {
+    .get(loginValidator.checkToken(), (req, res) => {
         res.json({message: "coucou"});
+    })
+;
+
+router.route('/test/admin')
+    .get(loginValidator.isAdmin(), (req, res) => {
+        res.json({message: "coucou admin"});
     })
 ;
 
