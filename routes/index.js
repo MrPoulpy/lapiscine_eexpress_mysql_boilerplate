@@ -2,14 +2,18 @@ const express = require('express');
 // On importe ici tous les fichiers "route" contenus dans le 
 // dossier "routes"
 const userRoute = require('./user.route');
+const movieRoute = require('./movie.route');
+const actorRoute = require('./actor.route');
 
 // Comme sur app.js, on appelle le router de Express...
 const router = express.Router();
 
 // ... et on pointe chaque entité vers la bonne sous-route.
-// Ici, les routes contenues dans le fichier user.route.js pointeront vers /
+// Ici, les routes contenues dans le fichier user.route.js pointeront vers /users
 // "http://localhost/api/users"
 router.use('/users', userRoute);
+router.use('/movies', movieRoute);
+router.use('/actors', actorRoute);
 
 // On exporte le router pour le rendre accessible en faisant un 
 // require de ce fichier.

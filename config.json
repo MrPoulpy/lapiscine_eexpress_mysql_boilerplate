@@ -3,6 +3,6 @@
     "basePath": "/api",
     "mysqlHost": "127.0.0.1",
     "mysqlUsername": "root",
-    "mysqlPassword": "",
-    "mysqlDatabase": ""
+    "mysqlPassword": "root",
+    "mysqlDatabase": "movies"
 }
