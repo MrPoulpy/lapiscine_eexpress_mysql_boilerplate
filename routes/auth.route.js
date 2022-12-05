@@ -1,13 +1,15 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const userController = require('../controllers/user.controller');
+const userSchema = require('../models/user');
+const validator = require('../utils/validator');
 const config = require('../config');
 const loginValidator = require('../utils/auth');
 
 const router = express.Router();
 
 router.route('/')
-    .post(async (req, res) => {
+    .post(validator(userSchema), async (req, res) => {
         
         let user = await userController.getByEmailAndPassword(req.body);
 
