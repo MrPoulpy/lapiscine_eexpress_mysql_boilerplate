@@ -46,6 +46,15 @@ const update = async (id, data) => {
             data.annee || movie.annee,
             id
         ]);
+
+        if (data.actors) {
+            const [req, err] = await db.query("DELETE FROM movies_actors WHERE movie_id = ?", [id]);
+            if (!req) {
+                for (let actor of data.actors) {
+                    const [req, err] = await db.query("INSERT INTO movies_actors (movie_id, actor_id) VALUES (?, ?)", [id, actor]);
+                }
+            }
+        }
         if (!req) {
             return null;
         }
