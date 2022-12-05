@@ -1,6 +1,8 @@
 const express = require('express');
 
 const movieController = require('../controllers/movie.controller');
+const movieSchema = require('../models/movie');
+const validator = require('../utils/validator');
 
 const router = express.Router();
 
@@ -12,7 +14,7 @@ router.route('/')
         }
         res.status(200).json(movies);
     })
-    .put(async (req, res) => {
+    .put(validator(movieSchema), async (req, res) => {
         const new_movie = await movieController.add(req.body);
 
         if (!new_movie) {
@@ -30,7 +32,7 @@ router.route('/:id')
         }
         res.status(200).json(movie);
     })
-    .patch(async (req, res) => {
+    .patch(validator(movieSchema), async (req, res) => {
         const movie = await movieController.update(req.params.id, req.body);
         if (!movie) {
             res.status(404).json();

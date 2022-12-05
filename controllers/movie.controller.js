@@ -22,7 +22,11 @@ const getById = async (id) => {
 };
 
 const add = async (data) => {
+
     const [req, err] = await db.query("INSERT INTO movies (title, genre, annee) VALUES (?,?,?)", [data.title, data.genre, data.annee]);
+    for (let actor of data.actors) {
+        const [req, err] = await db.query("INSERT INTO movies_actors (movie_id, actor_id) VALUES (?, ?)", [req.insertId, actor]);
+    }
     if (!req) {
         return null;
     }
