@@ -2,7 +2,7 @@ const db = require('../utils/db');
 
 const actorController = require('./actor.controller');
 
-const getAll = async () => {
+const getAll = async (length) => {
     const [response, err] = await db.query("SELECT * FROM movies");
     const movies = [];
     for (let movie of response) {

@@ -4,6 +4,7 @@ const express = require('express');
 const userRoute = require('./user.route');
 const movieRoute = require('./movie.route');
 const actorRoute = require('./actor.route');
+const authRoute = require('./auth.route');
 
 // Comme sur app.js, on appelle le router de Express...
 const router = express.Router();
@@ -14,6 +15,7 @@ const router = express.Router();
 router.use('/users', userRoute);
 router.use('/movies', movieRoute);
 router.use('/actors', actorRoute);
+router.use('/login', authRoute);
 
 // On exporte le router pour le rendre accessible en faisant un 
 // require de ce fichier.

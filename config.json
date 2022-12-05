@@ -4,5 +4,6 @@
     "mysqlHost": "127.0.0.1",
     "mysqlUsername": "root",
     "mysqlPassword": "root",
-    "mysqlDatabase": "movies"
+    "mysqlDatabase": "movies",
+    "jwtPass": "unmotultrasecretetcomplexeetlongaussi"
 }

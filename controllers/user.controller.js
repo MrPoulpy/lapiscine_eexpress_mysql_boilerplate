@@ -58,11 +58,20 @@ const remove = async (id) => {
     return true;
 };
 
+const getByEmailAndPassword = async (data) => {
+    const [user, err] = await db.query("SELECT * FROM users WHERE email = ? AND password = ? LIMIT 1", [data.email, data.password]);
+    if (!user) {
+        return null;
+    }
+    return user[0];
+}
+
 // On exporte toutes les fonctions écrites ici
 module.exports = {
     getAll,
     getById,
     add,
     update,
-    remove
+    remove,
+    getByEmailAndPassword
 };
