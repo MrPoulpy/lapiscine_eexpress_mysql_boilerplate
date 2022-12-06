@@ -33,7 +33,12 @@ router.route('/:id')
         if (!movie) {
             res.status(404).json();
         }
-        res.status(200).json(movie);
+
+        if (req.auth.roles != "admin" && (movie.user_id != req.auth.id)) {
+            res.status(403).json({message: "C'est pas ton film, dégage"});
+        } else {
+            res.status(200).json(movie);
+        }
     })
     .patch(authValidator.isAuth(), validator(movieSchema), async (req, res) => {
         const movie = await movieController.update(req.params.id, req.body);
