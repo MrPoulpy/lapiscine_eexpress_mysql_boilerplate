@@ -24,11 +24,12 @@ const getById = async (id) => {
 const add = async (data) => {
 
     const [req, err] = await db.query("INSERT INTO movies (title, genre, annee) VALUES (?,?,?)", [data.title, data.genre, data.annee]);
-    for (let actor of data.actors) {
-        const [req, err] = await db.query("INSERT INTO movies_actors (movie_id, actor_id) VALUES (?, ?)", [req.insertId, actor]);
-    }
     if (!req) {
         return null;
+    } else {
+        for (let actor of data.actors) {
+            const [reqActor, err] = await db.query("INSERT INTO movies_actors (movie_id, actor_id) VALUES (?, ?)", [req.insertId, actor]);
+        }
     }
     return getById(req.insertId);
 
@@ -48,10 +49,10 @@ const update = async (id, data) => {
         ]);
 
         if (data.actors) {
-            const [req, err] = await db.query("DELETE FROM movies_actors WHERE movie_id = ?", [id]);
-            if (!req) {
+            const [reqDelete, err] = await db.query("DELETE FROM movies_actors WHERE movie_id = ?", [id]);
+            if (reqDelete) {
                 for (let actor of data.actors) {
-                    const [req, err] = await db.query("INSERT INTO movies_actors (movie_id, actor_id) VALUES (?, ?)", [id, actor]);
+                    const [reqActor, err] = await db.query("INSERT INTO movies_actors (movie_id, actor_id) VALUES (?, ?)", [id, actor]);
                 }
             }
         }

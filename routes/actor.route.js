@@ -2,6 +2,8 @@ const express = require('express');
 
 const actorController = require('../controllers/actor.controller');
 
+const authValidator = require('../utils/auth');
+
 const router = express.Router();
 
 router.route('/')
@@ -12,7 +14,7 @@ router.route('/')
         }
         res.status(200).json(actors);
     })
-    .put(async (req, res) => {
+    .put(authValidator.isAdmin(), async (req, res) => {
         const new_actor = await actorController.add(req.body);
 
         if (!new_actor) {
@@ -30,14 +32,14 @@ router.route('/:id')
         }
         res.status(200).json(actor);
     })
-    .patch(async (req, res) => {
+    .patch(authValidator.isAdmin(), async (req, res) => {
         const actor = await actorController.update(req.params.id, req.body);
         if (!actor) {
             res.status(404).json();
         }
         res.status(202).json(actor);
     })
-    .delete(async (req, res) => {
+    .delete(authValidator.isAdmin(), async (req, res) => {
         const actor = await actorController.remove(req.params.id);
         if (!actor) {
             res.status(404).json();

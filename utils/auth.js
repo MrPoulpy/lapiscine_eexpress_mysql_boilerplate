@@ -1,7 +1,7 @@
 const config = require('../config');
 const jwt = require('jsonwebtoken');
 
-const checkToken = () => {
+const isAuth = () => {
     return (req, res, next) => {
         // Je lis les headers
         const header = req.headers.authorization;
@@ -52,7 +52,7 @@ const isAdmin = () => {
     }
 };
 
-module.exports =  {
-    checkToken,
+module.exports = {
+    isAuth,
     isAdmin
-}
+};

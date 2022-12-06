@@ -32,7 +32,7 @@ router.route('/')
 ;
 
 router.route('/test')
-    .get(loginValidator.checkToken(), (req, res) => {
+    .get(loginValidator.isAuth(), (req, res) => {
         res.json({message: "coucou"});
     })
 ;
