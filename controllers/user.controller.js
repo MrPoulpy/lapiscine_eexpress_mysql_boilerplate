@@ -39,11 +39,19 @@ const update = async (id, data) => {
     if (!user) {
         return null;
     } else {
+        let password;
+        
+        if (data.password) {
+            password = await bcrypt.hash(data.password, 10);
+        } else {
+            password = user.password;
+        }
+
         // On met à jour, en réécrivant les champs potentiellement manquant, grace au user récupéré
         const [req, err] = await db.query("UPDATE users SET email = ?, password = ? WHERE id = ? LIMIT 1", 
         [
             data.email || user.email, 
-            data.password || user.password, 
+            password, 
             id
         ]);
         if (!req) {
