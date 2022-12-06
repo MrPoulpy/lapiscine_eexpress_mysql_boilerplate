@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 // On appelle un fichier créé qui tient le connexion MySQL.
 const db = require('../utils/db');
 
@@ -9,7 +11,7 @@ const getAll = async () => {
 
 const getById = async (id) => {
     const [user, err] = await db.query("SELECT * FROM users WHERE id = ?", [id]);
-    if (!user) {
+    if (!user || user.length == 0) {
         return null;
     }
     // getById sert ici à récupérer un seul user. On retourne donc user[0], car MySQL répond
@@ -18,7 +20,10 @@ const getById = async (id) => {
 };
 
 const add = async (data) => {
-    const [req, err] = await db.query("INSERT INTO users (email, password) VALUES (?,?)", [data.email, data.password]);
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const [req, err] = await db.query("INSERT INTO users (email, password, first_name, name, roles, created_at, updated_at) VALUES (?,?,?,?,?, NOW(), NOW())", 
+    [data.email, hashedPassword, data.first_name, data.name, 'user']);
     if (!req) {
         return null;
     }
@@ -59,8 +64,23 @@ const remove = async (id) => {
 };
 
 const getByEmailAndPassword = async (data) => {
-    const [user, err] = await db.query("SELECT * FROM users WHERE email = ? AND password = ? LIMIT 1", [data.email, data.password]);
-    if (!user) {
+    const user = await getByEmail(data);
+    if (!user) { 
+        return null;
+    }
+
+    const hashedPassword = await bcrypt.compare(data.password, user.password);
+    
+    if (hashedPassword) {
+        return user; 
+    } else {
+        return null;
+    }
+}
+
+const getByEmail = async (data) => {
+    const [user, err] = await db.query("SELECT * FROM users WHERE email = ?", [data.email]);
+    if (!user || user.length == 0) {
         return null;
     }
     return user[0];
@@ -73,5 +93,6 @@ module.exports = {
     add,
     update,
     remove,
-    getByEmailAndPassword
+    getByEmailAndPassword,
+    getByEmail
 };
