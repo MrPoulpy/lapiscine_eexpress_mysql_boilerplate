@@ -21,6 +21,8 @@ const isAuth = () => {
             if (err) {
                 res.status(401).json({message: "JWT invalide"});
             } else {
+                // Je rajoute le token décodé (i.e. les données de l'utilisateur) dans la requete
+                req.auth = decodedToken;
                 // next = je permet de passer a la suite de la requete
                 next();
             }
@@ -43,6 +45,8 @@ const isAdmin = () => {
             if (err) {
                 res.status(401).json({message: "JWT invalide"});
             } else if (decodedToken.roles == 'admin') {
+                // Je rajoute le token décodé (i.e. les données de l'utilisateur) dans la requete
+                req.auth = decodedToken;
                 // Je valide que si le user a le role "admin" dans son token
                 next();
             } else {

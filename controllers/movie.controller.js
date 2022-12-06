@@ -21,9 +21,9 @@ const getById = async (id) => {
     return movie[0];
 };
 
-const add = async (data) => {
+const add = async (data, user_id) => {
 
-    const [req, err] = await db.query("INSERT INTO movies (title, genre, annee) VALUES (?,?,?)", [data.title, data.genre, data.annee]);
+    const [req, err] = await db.query("INSERT INTO movies (title, genre, annee, user_id) VALUES (?,?,?,?)", [data.title, data.genre, data.annee, user_id]);
     if (!req) {
         return null;
     } else {

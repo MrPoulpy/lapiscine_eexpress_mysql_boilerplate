@@ -16,7 +16,9 @@ router.route('/')
         res.status(200).json(movies);
     })
     .put(authValidator.isAuth(), validator(movieSchema), async (req, res) => {
-        const new_movie = await movieController.add(req.body);
+
+        // Je récupère l'id de l'utilisateur connecté ici
+        const new_movie = await movieController.add(req.body, req.auth.id);
 
         if (!new_movie) {
             res.status(404).json();
