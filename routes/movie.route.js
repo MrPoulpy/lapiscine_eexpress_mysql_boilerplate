@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.route('/')
     .get(authValidator.isAuth(), async (req, res) => {
-        const movies = await movieController.getAll();
+        const movies = await movieController.getAll(req.auth);
         if (!movies) {
             res.status(404).json();
         }
@@ -30,29 +30,44 @@ router.route('/')
 router.route('/:id')
     .get(authValidator.isAuth(), async (req, res) => {
         const movie = await movieController.getById(req.params.id);
-        if (!movie) {
-            res.status(404).json();
-        }
 
         if (req.auth.roles != "admin" && (movie.user_id != req.auth.id)) {
             res.status(403).json({message: "C'est pas ton film, dégage"});
+        } else if (!movie) {
+            res.status(404).json();
         } else {
             res.status(200).json(movie);
         }
     })
     .patch(authValidator.isAuth(), validator(movieSchema), async (req, res) => {
-        const movie = await movieController.update(req.params.id, req.body);
-        if (!movie) {
+        const movie = await movieController.getById(req.params.id);
+
+        if (req.auth.roles != "admin" && (movie.user_id != req.auth.id)) {
+            res.status(403).json({message: "C'est pas ton film, dégage"});
+        } else if (!movie) {
             res.status(404).json();
+        } else {
+            const updated_movie = await movieController.update(req.params.id, req.body);
+            if (!updated_movie) {
+                res.status(404).json();
+            }
+            res.status(202).json(updated_movie);
         }
-        res.status(202).json(movie);
     })
     .delete(authValidator.isAuth(), async (req, res) => {
-        const movie = await movieController.remove(req.params.id);
-        if (!movie) {
+        const movie = await movieController.getById(req.params.id);
+
+        if (req.auth.roles != "admin" && (movie.user_id != req.auth.id)) {
+            res.status(403).json({message: "C'est pas ton film, dégage"});
+        } else if (!movie) {
             res.status(404).json();
+        } else {
+            const removed_movie = await movieController.remove(req.params.id);
+            if (!removed_movie) {
+                res.status(404).json();
+            }
+            res.status(202).json();
         }
-        res.status(202).json();
     })
 ;
 

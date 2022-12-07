@@ -2,14 +2,25 @@ const db = require('../utils/db');
 
 const actorController = require('./actor.controller');
 
-const getAll = async (length) => {
-    const [response, err] = await db.query("SELECT * FROM movies");
-    const movies = [];
-    for (let movie of response) {
-        movie.actors = await findActorsById(movie.id);
-        movies.push(movie);
+const getAll = async (auth) => {
+    if (auth.roles == 'admin') {
+        const [response, err] = await db.query("SELECT * FROM movies");
+        const movies = [];
+        for (let movie of response) {
+            movie.actors = await findActorsById(movie.id);
+            movies.push(movie);
+        }
+        return movies;
+    } else {
+        const [response, err] = await db.query("SELECT * FROM movies WHERE user_id = ?", [auth.id]);
+        const movies = [];
+        for (let movie of response) {
+            movie.actors = await findActorsById(movie.id);
+            movies.push(movie);
+        }
+        return movies;
     }
-    return movies;
+
 };
 
 const getById = async (id) => {

@@ -6,5 +6,5 @@
     "mysqlPassword": "root",
     "mysqlDatabase": "movies",
     "jwtPass": "unmotultrasecretetcomplexeetlongaussi",
-    "jwtExpireLength": "1 hour"
+    "jwtExpireLength": "99 years"
 }
